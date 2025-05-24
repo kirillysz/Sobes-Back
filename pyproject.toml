@@ -1,0 +1,11 @@
+[project]
+name = "sobes-back"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "asyncpg>=0.30.0",
+    "fastapi-limiter>=0.1.6",
+    "fastapi[standard]>=0.115.12",
+    "pytest-asyncio>=0.26.0",
+]
