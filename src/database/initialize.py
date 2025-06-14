@@ -28,11 +28,11 @@ class DatabaseInitializer:
             )
             return True
 
-        except asyncpg.DuplicateTableError as duplicate_error:
+        except asyncpg.exceptions.DuplicateObjectError as duplicate_error:
             pass
 
         except Exception as err:
-            raise Exception(err)
+            raise RuntimeError(err)
 
         finally:
             await self.close()

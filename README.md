@@ -59,6 +59,7 @@ The goal is to develop a REST API for a Task Manager application with the follow
 7. **DELETE /tasks/{id}**: Delete a task (accessible to task owner or admin).
 8. **GET /analytics**: Retrieve task statistics by status and user for a given period.
 
+
 ### Example Requests
 - **Create a Task**:
   ```bash

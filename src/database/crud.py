@@ -1,15 +1,20 @@
 import uuid
-import asyncpg
 
-from typing import Optional
+from typing import Optional, Dict, Any
+
+from src.models.enums.role_enums import Role
 from src.database.initialize import DatabaseInitializer
-from src.uitls.hashing import hash_value
+
+from src.models.enums.status_enums import Status
+from src.utils.hashing import hash_value
 
 from pydantic import UUID4, Json
 
 from src.config.database_config import QUERY_REGISTER_NEW_USER, QUERY_AUTH_USER, QUERY_GET_USER_BY_USERNAME, \
-    QUERY_CREATE_TASK, QUERY_GET_TASK_BY_ID, QUERY_UPDATE_TASK_BY_ID, QUERY_DELETE_TASK_BY_ID
+    QUERY_CREATE_TASK, QUERY_GET_TASK_BY_ID, QUERY_UPDATE_TASK_BY_ID, QUERY_DELETE_TASK_BY_ID, \
+    QUERY_GET_TASK_FOR_ANALYTICS
 
+from src.utils.data_time import human_to_timestamp
 
 class Database(DatabaseInitializer):
     def __init__(self, database_uri: str):
@@ -23,7 +28,7 @@ class Database(DatabaseInitializer):
 
         return result
 
-    async def register_new_user(self, username: str, role: str, password: str) -> bool:
+    async def register_new_user(self, username: str, role: Role, password: str) -> bool:
         await self.connect()
 
         id = uuid.uuid4()
@@ -33,7 +38,7 @@ class Database(DatabaseInitializer):
             if not await self.get_user_by_username(username):
                 await self.connection.execute(
                     QUERY_REGISTER_NEW_USER,
-                    id, username, role, hashed_password
+                    id, username, role.value, hashed_password
                 )
                 return True
             else:
@@ -58,7 +63,7 @@ class Database(DatabaseInitializer):
             if not result:
                 return False
 
-            return True
+            return result
 
         except Exception as err:
             raise Exception(err)
@@ -80,35 +85,65 @@ class Database(DatabaseInitializer):
         except Exception as err:
             raise Exception(err)
 
+
+    async def get_tasks_for_analytics(self,
+                                     user_id: UUID4,
+                                     status: str,
+                                     from_date: str,
+                                     to_date: str):
+        await self.connect()
+
+        timestamped_from_date = human_to_timestamp(from_date)
+        timestamped_to_date = human_to_timestamp(to_date)
+
+        try:
+            result = await self.connection.fetch(
+                QUERY_GET_TASK_FOR_ANALYTICS,
+                user_id,
+                status,
+                timestamped_from_date,
+                timestamped_to_date
+            )
+
+            return result
+
+        except Exception as err:
+            raise RuntimeError(err)
+
+        finally:
+            await self.close()
+
+
     async def create_task(self, id: UUID4,
                           user_id: UUID4,
                           title: str,
                           description: str,
-                          status: str,
+                          status: Status,
                           created_at: float,
                           city: Optional[str] = None,
-                          weather: Optional[Json] = None) -> bool:
+                          weather: Optional[Dict[str, Any]] = None) -> bool:
         await self.connect()
 
+        timestamped_created_time = human_to_timestamp(str(created_at))
         try:
             result = await self.connection.execute(
                 QUERY_CREATE_TASK,
-                id, user_id, title, description, status, created_at, city, weather
+                id, user_id, title, description, status.value, timestamped_created_time, city, weather
             )
 
             if not result:
                 return False
 
-            return True
-
-        except asyncpg.DuplicateSchemaError as duplicate_err:
-            pass
+            return {"task_id": id, "user_id": user_id, "title": title,
+                    "description": description, "status": status, "created_at": timestamped_created_time,
+                    "city": city, weather: "weather"}
 
         except Exception as err:
             raise Exception(err)
 
         finally:
             await self.close()
+
 
     async def update_task_by_id(self, task_id: UUID4,
                                 title: Optional[str] = None,
@@ -157,6 +192,7 @@ class Database(DatabaseInitializer):
         except Exception as err:
             raise Exception(err)
 
+
     async def delete_task_by_id(self, task_id: UUID4):
         await self.connect()
 
@@ -170,14 +206,26 @@ class Database(DatabaseInitializer):
         except Exception as err:
             raise Exception(err)
 
+
 async def main():
     db = Database(database_uri="postgresql://lazzy:admin@127.0.0.1:5432/test_back")
 
-    res = await db.update_task_by_id(
-        task_id="87aaedfb-60aa-4238-bd9f-f0c743b99177",
-        title="NEW TITLE"
-    )
-    print(res)
+    # res = await db.get_tasks_for_analytics(
+    #     user_id="046e70b2-5c84-4263-95db-12fb8276f6e8",
+    #     status="todo",
+    #     from_date="2025-05-24 21:22:11.870725",
+    #     to_date="2025-05-24 21:22:11.870725"
+    # )
+
+    # print(res)
+    # res = await db.register_new_user(
+    #     username="1",
+    #     role="admin",
+    #     password="1"
+    # )
+    # print(res
+    #       )
+
 
 if __name__ == "__main__":
     import asyncio

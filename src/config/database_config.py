@@ -1,6 +1,14 @@
 QUERY_CREATE_TABLES = """
-CREATE TYPE user_role AS ENUM ('admin', 'user');
-CREATE TYPE task_status AS ENUM ('todo', 'in_progress', 'done');
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
+        CREATE TYPE user_role AS ENUM ('admin', 'user');
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'task_status') THEN
+        CREATE TYPE task_status AS ENUM ('todo', 'in_progress', 'done');
+    END IF;
+END$$;
 
 CREATE TABLE IF NOT EXISTS users(
     id UUID UNIQUE,
@@ -16,8 +24,8 @@ CREATE TABLE IF NOT EXISTS tasks(
     description TEXT NOT NULL,
     status task_status,
     created_at TIMESTAMP,
-    city TEXT NOT NULL,
-    weather jsonb NOT NULL,
+    city TEXT,
+    weather jsonb,
     
     FOREIGN KEY (user_id) REFERENCES users (id)
 )
@@ -29,6 +37,7 @@ QUERY_GET_USER_BY_USERNAME = "SELECT id FROM users WHERE username = $1"
 
 
 QUERY_GET_TASK_BY_ID = "SELECT user_id, title, description, status, created_at, city, weather FROM tasks WHERE id = $1"
+QUERY_GET_TASK_FOR_ANALYTICS = "SELECT id, title, description, created_at, city, weather FROM tasks WHERE user_id = $1 AND status = $2 AND created_at BETWEEN $3 AND $4"
 QUERY_CREATE_TASK = """
     INSERT INTO tasks(id, user_id, title, description, status, created_at, city, weather) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
