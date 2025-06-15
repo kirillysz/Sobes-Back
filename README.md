@@ -50,13 +50,7 @@ The goal is to develop a REST API for a Task Manager application with the follow
   - `user_id`: ID of the user who created the task (foreign key).
 
 ### API Endpoints
-1. **POST /auth/register**: Register a new user.
-2. **POST /auth/login**: Authenticate a user and return a JWT token.
-3. **POST /tasks**: Create a new task (includes weather data if city is provided).
-4. **GET /tasks**: List tasks with filtering (by status, user, date), pagination, and sorting.
-5. **GET /tasks/{id}**: Retrieve a task by ID (accessible to task owner or admin).
 6. **PUT /tasks/{id}**: Update a task (accessible to task owner or admin).
-7. **DELETE /tasks/{id}**: Delete a task (accessible to task owner or admin).
 8. **GET /analytics**: Retrieve task statistics by status and user for a given period.
 
 

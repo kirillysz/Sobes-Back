@@ -5,24 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e943bd83-5b44-45b2-99c8-259673233494" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/api/v1/app.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/api/v1/routers/auth.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/api/v1/routers/tasks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/config/constants.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/data_time.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/jwt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/v1/routers/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/v1/routers/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/v1/routers/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/v1/routers/tasks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config/database_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/database_config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/database/crud.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/crud.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/initialize.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/initialize.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/models/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/uitls/hashing.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/hashing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uv.lock" beforeDir="false" afterPath="$PROJECT_DIR$/uv.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/data_time.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/data_time.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,12 +36,12 @@
     &quot;assignee&quot;: &quot;kirillysz&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/kirillysz/Sobes-Back.git&quot;,
-    &quot;accountId&quot;: &quot;02cbbae9-6caf-4f5d-9fa6-14fafe0471a9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:kirillysz/Sobes-Back.git",
+    "accountId": "02cbbae9-6caf-4f5d-9fa6-14fafe0471a9"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 5
@@ -60,15 +51,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/run/media/lazzy/1E72808A0468304E/KProjects/DetaVPN&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.crud.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/lazzy/PycharmProjects/RSK_back"
   }
-}</component>
+}]]></component>
+  <component name="RunManager">
+    <configuration name="crud" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sobes_back" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/database" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/database/crud.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.crud" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

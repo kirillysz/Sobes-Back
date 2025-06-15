@@ -29,6 +29,10 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> T
         )
     
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+
+    # user[0][0] -> user's UUID
+    # user[0][2] -> user's role
+
     access_token = create_access_token(
         payload_data={
             "sub": str(user[0][0]),
@@ -50,8 +54,8 @@ async def register(user: UserGetInfo):
         role=user_role,
         password=user_password
     )
-
+    print(result)
     if result:
         return {"status": "success"}
 
-    return {"status": "error"}
+    return {"status": "error", "details": "user already exists"}

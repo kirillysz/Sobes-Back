@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS tasks(
 QUERY_REGISTER_NEW_USER = """INSERT INTO users(id, username, role, password_hash) VALUES($1, $2, $3, $4)"""
 QUERY_AUTH_USER = "SELECT * FROM users WHERE username = $1 AND password_hash = $2"
 QUERY_GET_USER_BY_USERNAME = "SELECT id FROM users WHERE username = $1"
+QUERY_GET_ROLE_BY_ID = "SELECT role FROM users WHERE id = $1"
 
 
 QUERY_GET_TASK_BY_ID = "SELECT user_id, title, description, status, created_at, city, weather FROM tasks WHERE id = $1"
@@ -44,3 +45,4 @@ QUERY_CREATE_TASK = """
 """
 QUERY_DELETE_TASK_BY_ID = "DELETE FROM tasks WHERE id = $1"
 QUERY_UPDATE_TASK_BY_ID = "UPDATE tasks SET"
+QUERY_GET_TASK_WITH_FILTER = "SELECT * FROM tasks WHERE"

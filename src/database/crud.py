@@ -1,32 +1,47 @@
+import json
 import uuid
 
-from typing import Optional, Dict, Any
+from typing import Optional
+from datetime import datetime
 
 from src.models.enums.role_enums import Role
 from src.database.initialize import DatabaseInitializer
 
 from src.models.enums.status_enums import Status
 from src.utils.hashing import hash_value
+from src.utils.data_time import dt_from_float
 
 from pydantic import UUID4, Json
 
 from src.config.database_config import QUERY_REGISTER_NEW_USER, QUERY_AUTH_USER, QUERY_GET_USER_BY_USERNAME, \
     QUERY_CREATE_TASK, QUERY_GET_TASK_BY_ID, QUERY_UPDATE_TASK_BY_ID, QUERY_DELETE_TASK_BY_ID, \
-    QUERY_GET_TASK_FOR_ANALYTICS
+    QUERY_GET_TASK_FOR_ANALYTICS, QUERY_GET_ROLE_BY_ID, QUERY_GET_TASK_WITH_FILTER
 
-from src.utils.data_time import human_to_timestamp
 
 class Database(DatabaseInitializer):
     def __init__(self, database_uri: str):
         super().__init__(database_uri=database_uri)
 
     async def get_user_by_username(self, username: str):
+        await self.connect()
+
         result = await self.connection.fetch(
             QUERY_GET_USER_BY_USERNAME,
             username
         )
 
         return result
+
+    async def get_role_by_id(self, user_id: UUID4):
+        await self.connect()
+
+        result = await self.connection.fetch(
+            QUERY_GET_ROLE_BY_ID,
+            user_id
+        )
+
+        return result
+
 
     async def register_new_user(self, username: str, role: Role, password: str) -> bool:
         await self.connect()
@@ -89,20 +104,17 @@ class Database(DatabaseInitializer):
     async def get_tasks_for_analytics(self,
                                      user_id: UUID4,
                                      status: str,
-                                     from_date: str,
-                                     to_date: str):
+                                     from_date: float,
+                                     to_date: float):
         await self.connect()
-
-        timestamped_from_date = human_to_timestamp(from_date)
-        timestamped_to_date = human_to_timestamp(to_date)
 
         try:
             result = await self.connection.fetch(
                 QUERY_GET_TASK_FOR_ANALYTICS,
                 user_id,
                 status,
-                timestamped_from_date,
-                timestamped_to_date
+                from_date,
+                to_date
             )
 
             return result
@@ -121,22 +133,22 @@ class Database(DatabaseInitializer):
                           status: Status,
                           created_at: float,
                           city: Optional[str] = None,
-                          weather: Optional[Dict[str, Any]] = None) -> bool:
+                          weather: Optional[dict] = None) -> bool:
         await self.connect()
 
-        timestamped_created_time = human_to_timestamp(str(created_at))
+        dt_created_at = dt_from_float(created_at)
+        weather_json = json.dumps(weather) if weather is not None else None
+
         try:
             result = await self.connection.execute(
                 QUERY_CREATE_TASK,
-                id, user_id, title, description, status.value, timestamped_created_time, city, weather
+                id, user_id, title, description, status.value, dt_created_at, city, weather_json
             )
 
             if not result:
                 return False
 
-            return {"task_id": id, "user_id": user_id, "title": title,
-                    "description": description, "status": status, "created_at": timestamped_created_time,
-                    "city": city, weather: "weather"}
+            return result
 
         except Exception as err:
             raise Exception(err)
@@ -145,7 +157,8 @@ class Database(DatabaseInitializer):
             await self.close()
 
 
-    async def update_task_by_id(self, task_id: UUID4,
+    async def update_task_by_id(self,
+                                task_id: UUID4,
                                 title: Optional[str] = None,
                                 description: Optional[str] = None,
                                 status: Optional[str] = None,
@@ -206,6 +219,46 @@ class Database(DatabaseInitializer):
         except Exception as err:
             raise Exception(err)
 
+    async def sort_tasks(self,
+                         status: Optional[str] = None,
+                         user: Optional[str] = None,
+                         date: Optional[float] = None):
+
+        await self.connect()
+
+        filters = []
+        values = []
+        i = 1
+
+        if status:
+            filters.append(f"status = ${i}")
+            values.append(status)
+            i += 1
+
+        if user:
+            filters.append(f"user_id = ${i}")
+            values.append(user)
+            i += 1
+
+        if date:
+            filters.append(f"created_at >= ${i}")
+            values.append(datetime.fromtimestamp(date))
+            i += 1
+
+        where_clause = " AND ".join(filters) if filters else "1=1"
+
+
+        query = f"""
+        SELECT * FROM tasks
+        WHERE {where_clause}
+        ORDER BY created_at DESC
+        """
+
+        try:
+            result = await self.connection.fetch(query, *values)
+            return result if result else None
+        finally:
+            await self.close()
 
 async def main():
     db = Database(database_uri="postgresql://lazzy:admin@127.0.0.1:5432/test_back")
